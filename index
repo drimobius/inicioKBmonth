@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Kanban Month - Arcade Mode</title>
+    <!-- Importando tipografía estilo Pixel Art -->
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        body, html { 
+            margin: 0; padding: 0; width: 100%; height: 100%; 
+            background-color: #1a1a2e; 
+            /* Fondo estilo 8-bits: patrón de rejilla sutil */
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+            overflow: hidden; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            font-family: 'Press Start 2P', cursive;
+        }
+        
+        #display { font-size: 15vw; color: #ff00ff; text-shadow: 8px 8px 0px #8b008b; cursor: pointer; }
+        #message { display: none; text-align: center; color: #ffff00; font-size: 5vw; text-shadow: 4px 4px 0px #ff8c00; }
+        
+        /* Animación de confeti tipo píxel */
+        .confetti { position: absolute; width: 15px; height: 15px; background: red; animation: fall linear infinite; }
+        @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
+        
+        /* Efecto de pantalla antigua */
+        body::after {
+            content: " ";
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
+                        linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background-size: 100% 4px, 3px 100%;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+
+<div id="display">PUSH START</div>
+<div id="message">THE KANBAN MONTH<br>BEGINS!<br>よし/良し!</div>
+
+<script>
+    let started = false;
+    const display = document.getElementById('display');
+    const message = document.getElementById('message');
+
+    window.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && !started) {
+            started = true;
+            document.documentElement.requestFullscreen();
+            startCountdown(5);
+        }
+    });
+
+    function startCountdown(count) {
+        display.innerText = count;
+        let timer = setInterval(() => {
+            count--;
+            if (count > 0) {
+                display.innerText = count;
+            } else {
+                clearInterval(timer);
+                display.style.display = 'none';
+                message.style.display = 'block';
+                startConfetti();
+            }
+        }, 1000);
+    }
+
+    function startConfetti() {
+        for (let i = 0; i < 80; i++) {
+            const c = document.createElement('div');
+            c.className = 'confetti';
+            c.style.left = Math.random() * 100 + 'vw';
+            c.style.backgroundColor = ['#ff00ff', '#00ffff', '#ffff00', '#00ff00'][Math.floor(Math.random() * 4)];
+            c.style.animationDuration = (Math.random() * 2 + 1) + 's';
+            document.body.appendChild(c);
+        }
+    }
+</script>
+</body>
+</html>
